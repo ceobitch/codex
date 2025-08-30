@@ -35,6 +35,15 @@ check_git() {
     echo "✅ Git $(git --version | cut -d' ' -f3)"
 }
 
+# Check Rust
+check_rust() {
+    if ! command -v cargo &> /dev/null; then
+        echo "❌ Rust required. Install from: https://rustup.rs/"
+        exit 1
+    fi
+    echo "✅ Rust $(cargo --version | cut -d' ' -f2)"
+}
+
 # Clean installation
 cleanup() {
     echo "🧹 Cleaning previous installations..."
@@ -75,6 +84,7 @@ verify() {
 main() {
     check_node
     check_git
+    check_rust
     cleanup
     install_nova
     verify

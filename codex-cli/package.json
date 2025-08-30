@@ -25,12 +25,22 @@
     "security",
     "ai",
     "terminal",
-    "cli"
+    "cli",
+    "nova",
+    "threat-detection"
   ],
+  "author": "Nova Shield Team",
+  "homepage": "https://github.com/ceobitch/nova-cli#readme",
+  "bugs": {
+    "url": "https://github.com/ceobitch/nova-cli/issues"
+  },
   "dependencies": {
     "@vscode/ripgrep": "^1.15.14"
   },
   "devDependencies": {
     "prettier": "^3.3.3"
+  },
+  "scripts": {
+    "postinstall": "echo '🛡️ Nova Shield installed successfully! Run: nova'"
   }
 }
