@@ -7,7 +7,7 @@
 # Foreground colors
 
 - **Default:** Most of the time, just use the default foreground color. `reset` can help get it back.
-- **User input tips, selection, and status indicators:** Use ANSI `cyan`.
+- **User input tips, selection, and status indicators:** Use ANSI `orange` (Color::Rgb(255, 165, 0)).
 - **Success and additions:** Use ANSI `green`.
 - **Errors, failures and deletions:** Use ANSI `red`.
 - **Codex:** Use ANSI `magenta`.

@@ -1503,7 +1503,7 @@ mod tests {
             true,
             sender,
             false,
-            "Ask Codex to do anything".to_string(),
+            "Scan system, detect malware, harden security".to_string(),
             false,
         );
 
@@ -1532,7 +1532,7 @@ mod tests {
             true,
             sender,
             false,
-            "Ask Codex to do anything".to_string(),
+            "Scan system, detect malware, harden security".to_string(),
             false,
         );
 
@@ -1567,7 +1567,7 @@ mod tests {
             true,
             sender,
             false,
-            "Ask Codex to do anything".to_string(),
+            "Scan system, detect malware, harden security".to_string(),
             false,
         );
 
@@ -1609,7 +1609,7 @@ mod tests {
                 true,
                 sender.clone(),
                 false,
-                "Ask Codex to do anything".to_string(),
+                "Scan system, detect malware, harden security".to_string(),
                 false,
             );
 
@@ -1664,7 +1664,7 @@ mod tests {
             true,
             sender,
             false,
-            "Ask Codex to do anything".to_string(),
+            "Scan system, detect malware, harden security".to_string(),
             false,
         );
 
@@ -1701,7 +1701,7 @@ mod tests {
             true,
             sender,
             false,
-            "Ask Codex to do anything".to_string(),
+            "Scan system, detect malware, harden security".to_string(),
             false,
         );
 
@@ -1726,7 +1726,7 @@ mod tests {
             true,
             sender,
             false,
-            "Ask Codex to do anything".to_string(),
+            "Scan system, detect malware, harden security".to_string(),
             false,
         );
 
@@ -1761,7 +1761,7 @@ mod tests {
             true,
             sender,
             false,
-            "Ask Codex to do anything".to_string(),
+            "Scan system, detect malware, harden security".to_string(),
             false,
         );
 
@@ -1840,7 +1840,7 @@ mod tests {
             true,
             sender,
             false,
-            "Ask Codex to do anything".to_string(),
+            "Scan system, detect malware, harden security".to_string(),
             false,
         );
 
@@ -1912,7 +1912,7 @@ mod tests {
             true,
             sender,
             false,
-            "Ask Codex to do anything".to_string(),
+            "Scan system, detect malware, harden security".to_string(),
             false,
         );
 
@@ -1960,7 +1960,7 @@ mod tests {
             true,
             sender,
             false,
-            "Ask Codex to do anything".to_string(),
+            "Scan system, detect malware, harden security".to_string(),
             false,
         );
         let path = PathBuf::from("/tmp/image1.png");
@@ -1984,7 +1984,7 @@ mod tests {
             true,
             sender,
             false,
-            "Ask Codex to do anything".to_string(),
+            "Scan system, detect malware, harden security".to_string(),
             false,
         );
         let path = PathBuf::from("/tmp/image2.png");
@@ -2009,7 +2009,7 @@ mod tests {
             true,
             sender,
             false,
-            "Ask Codex to do anything".to_string(),
+            "Scan system, detect malware, harden security".to_string(),
             false,
         );
         let path = PathBuf::from("/tmp/image3.png");
@@ -2050,7 +2050,7 @@ mod tests {
             true,
             sender,
             false,
-            "Ask Codex to do anything".to_string(),
+            "Scan system, detect malware, harden security".to_string(),
             false,
         );
 
@@ -2076,7 +2076,7 @@ mod tests {
             true,
             sender,
             false,
-            "Ask Codex to do anything".to_string(),
+            "Scan system, detect malware, harden security".to_string(),
             false,
         );
 
@@ -2123,7 +2123,7 @@ mod tests {
             true,
             sender,
             false,
-            "Ask Codex to do anything".to_string(),
+            "Scan system, detect malware, harden security".to_string(),
             false,
         );
 
@@ -2145,7 +2145,7 @@ mod tests {
             true,
             sender,
             false,
-            "Ask Codex to do anything".to_string(),
+            "Scan system, detect malware, harden security".to_string(),
             false,
         );
 
@@ -2179,7 +2179,7 @@ mod tests {
             true,
             sender,
             false,
-            "Ask Codex to do anything".to_string(),
+            "Scan system, detect malware, harden security".to_string(),
             false,
         );
 
@@ -2223,7 +2223,7 @@ mod tests {
             true,
             sender,
             false,
-            "Ask Codex to do anything".to_string(),
+            "Scan system, detect malware, harden security".to_string(),
             false,
         );
 
@@ -2255,7 +2255,7 @@ mod tests {
             true,
             sender,
             false,
-            "Ask Codex to do anything".to_string(),
+            "Scan system, detect malware, harden security".to_string(),
             false,
         );
 

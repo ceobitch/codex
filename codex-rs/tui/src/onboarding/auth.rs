@@ -164,8 +164,8 @@ impl AuthModeWidget {
 
             let line1 = if is_selected {
                 Line::from(vec![
-                    format!("{} {}. ", caret, idx + 1).cyan().dim(),
-                    text.to_string().cyan(),
+                    format!("{} {}. ", caret, idx + 1).fg(Color::Rgb(255, 165, 0)).dim(),
+                    text.to_string().fg(Color::Rgb(255, 165, 0)),
                 ])
             } else {
                 Line::from(format!("  {}. {text}", idx + 1))
@@ -173,7 +173,7 @@ impl AuthModeWidget {
 
             let line2 = if is_selected {
                 Line::from(format!("     {description}"))
-                    .fg(Color::Cyan)
+                    .fg(Color::Rgb(255, 165, 0))
                     .add_modifier(Modifier::DIM)
             } else {
                 Line::from(format!("     {description}"))
@@ -242,7 +242,7 @@ impl AuthModeWidget {
             lines.push(Line::from("  If the link doesn't open automatically, open the following link to authenticate:"));
             lines.push(Line::from(vec![
                 Span::raw("  "),
-                state.auth_url.as_str().cyan().underlined(),
+                state.auth_url.as_str().fg(Color::Rgb(255, 165, 0)).underlined(),
             ]));
             lines.push(Line::from(""));
         }

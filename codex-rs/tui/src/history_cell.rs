@@ -254,6 +254,20 @@ pub(crate) fn new_session_info(
         history_entry_count: _,
     } = event;
     if is_first_event {
+        let mut lines: Vec<Line<'static>> = Vec::new();
+        
+        // Show Nova Shield ASCII art in orange
+        let orange = Color::Rgb(255, 165, 0);
+        for raw in include_str!("../../../ascii-text-art.txt").lines() {
+            lines.push(Line::from(Span::styled(
+                raw.to_string(),
+                Style::default().fg(orange),
+            )));
+        }
+        lines.push(Line::from(""));
+        lines.push(Line::from("🛡️ Nova Shield - AI Cybersecurity Expert".fg(orange).bold()));
+        lines.push(Line::from(""));
+
         let cwd_str = match relativize_to_home(&config.cwd) {
             Some(rel) if !rel.as_os_str().is_empty() => {
                 let sep = std::path::MAIN_SEPARATOR;
@@ -263,68 +277,22 @@ pub(crate) fn new_session_info(
             None => config.cwd.display().to_string(),
         };
 
-        let lines: Vec<Line<'static>> = vec![
+        let session_lines: Vec<Line<'static>> = vec![
             Line::from(Span::from("")),
             Line::from(vec![
                 Span::raw(">_ ").dim(),
                 Span::styled(
-                    "You are using OpenAI Codex in",
-                    Style::default().add_modifier(Modifier::BOLD),
+                    "Nova Shield active in",
+                    Style::default().add_modifier(Modifier::BOLD).fg(orange),
                 ),
                 Span::raw(format!(" {cwd_str}")).dim(),
             ]),
             Line::from("".dim()),
-            Line::from(" To get started, describe a task or try one of these commands:".dim()),
-            Line::from("".dim()),
-            Line::from(vec![
-                Span::styled(
-                    " /init",
-                    Style::default()
-                        .add_modifier(Modifier::BOLD)
-                        .fg(Color::White),
-                ),
-                Span::styled(
-                    format!(" - {}", SlashCommand::Init.description()),
-                    Style::default().dim(),
-                ),
-            ]),
-            Line::from(vec![
-                Span::styled(
-                    " /status",
-                    Style::default()
-                        .add_modifier(Modifier::BOLD)
-                        .fg(Color::White),
-                ),
-                Span::styled(
-                    format!(" - {}", SlashCommand::Status.description()),
-                    Style::default().dim(),
-                ),
-            ]),
-            Line::from(vec![
-                Span::styled(
-                    " /approvals",
-                    Style::default()
-                        .add_modifier(Modifier::BOLD)
-                        .fg(Color::White),
-                ),
-                Span::styled(
-                    format!(" - {}", SlashCommand::Approvals.description()),
-                    Style::default().dim(),
-                ),
-            ]),
-            Line::from(vec![
-                Span::styled(
-                    " /model",
-                    Style::default()
-                        .add_modifier(Modifier::BOLD)
-                        .fg(Color::White),
-                ),
-                Span::styled(
-                    format!(" - {}", SlashCommand::Model.description()),
-                    Style::default().dim(),
-                ),
-            ]),
+            Line::from(" Ready to secure your system. Type /nova for cybersecurity mode.".dim()),
         ];
+        
+        // Combine ASCII art lines with session info lines
+        lines.extend(session_lines);
         PlainHistoryCell { lines }
     } else if config.model == model {
         PlainHistoryCell { lines: Vec::new() }
@@ -342,7 +310,7 @@ pub(crate) fn new_session_info(
 pub(crate) fn new_user_prompt(message: String) -> PlainHistoryCell {
     let mut lines: Vec<Line<'static>> = Vec::new();
     lines.push(Line::from(""));
-    lines.push(Line::from("user".cyan().bold()));
+    lines.push(Line::from("user".fg(Color::Rgb(255, 165, 0)).bold()));
     lines.extend(message.lines().map(|l| Line::from(l.to_string())));
 
     PlainHistoryCell { lines }

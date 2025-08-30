@@ -163,7 +163,7 @@ fn make_chatwidget_manual() -> (
         frame_requester: crate::tui::FrameRequester::test_dummy(),
         has_input_focus: true,
         enhanced_keys_supported: false,
-        placeholder_text: "Ask Codex to do anything".to_string(),
+        placeholder_text: "Scan system, detect malware, harden security".to_string(),
         disable_paste_burst: false,
     });
     let widget = ChatWidget {
