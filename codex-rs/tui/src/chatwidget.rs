@@ -65,6 +65,7 @@ use crate::slash_command::SlashCommand;
 use crate::tui::FrameRequester;
 // streaming internals are provided by crate::streaming and crate::markdown_stream
 use crate::user_approval_widget::ApprovalRequest;
+use crate::sound::SoundManager;
 mod interrupts;
 use self::interrupts::InterruptManager;
 mod agent;
@@ -96,6 +97,8 @@ pub(crate) struct ChatWidget {
     active_exec_cell: Option<ExecCell>,
     config: Config,
     initial_user_message: Option<UserMessage>,
+    // Flag to hide the first user message from history (for Nova prompt)
+    hide_first_user_message: bool,
     total_token_usage: TokenUsage,
     last_token_usage: TokenUsage,
     // Stream lifecycle controller
@@ -116,6 +119,8 @@ pub(crate) struct ChatWidget {
     last_history_was_exec: bool,
     // User messages queued while a turn is in progress
     queued_user_messages: VecDeque<UserMessage>,
+    // Sound effects manager
+    sound_manager: SoundManager,
 }
 
 struct UserMessage {
@@ -164,6 +169,7 @@ impl ChatWidget {
     }
 
     fn on_agent_message(&mut self, message: String) {
+        self.sound_manager.play_received();
         let sink = AppEventHistorySink(self.app_event_tx.clone());
         let finished = self.stream.apply_final_answer(&message, &sink);
         self.handle_if_stream_finished(finished);
@@ -261,6 +267,7 @@ impl ChatWidget {
     }
 
     fn on_error(&mut self, message: String) {
+        self.sound_manager.play_error();
         self.finalize_turn_with_error_message(message);
         self.request_redraw();
 
@@ -620,9 +627,10 @@ impl ChatWidget {
             active_exec_cell: None,
             config: config.clone(),
             initial_user_message: create_initial_user_message(
-                initial_prompt.unwrap_or_default(),
+                initial_prompt.clone().unwrap_or_default(),
                 initial_images,
             ),
+            hide_first_user_message: initial_prompt.is_some(),
             total_token_usage: TokenUsage::default(),
             last_token_usage: TokenUsage::default(),
             stream: StreamController::new(config),
@@ -636,6 +644,7 @@ impl ChatWidget {
             last_history_was_exec: false,
             queued_user_messages: VecDeque::new(),
             show_welcome_banner: true,
+            sound_manager: SoundManager::new(),
         }
     }
 
@@ -669,6 +678,7 @@ impl ChatWidget {
             active_exec_cell: None,
             config: config.clone(),
             initial_user_message: None,
+            hide_first_user_message: false,
             total_token_usage: TokenUsage::default(),
             last_token_usage: TokenUsage::default(),
             stream: StreamController::new(config),
@@ -682,6 +692,7 @@ impl ChatWidget {
             last_history_was_exec: false,
             queued_user_messages: VecDeque::new(),
             show_welcome_banner: false,
+            sound_manager: SoundManager::new(),
         }
     }
 
@@ -736,6 +747,7 @@ impl ChatWidget {
                             self.queued_user_messages.push_back(user_message);
                             self.refresh_queued_user_messages();
                         } else {
+                            self.sound_manager.play_sent();
                             self.submit_user_message(user_message);
                         }
                     }
@@ -944,9 +956,14 @@ impl ChatWidget {
                 });
         }
 
-        // Only show the text portion in conversation history.
-        if !text.is_empty() {
+        // Only show the text portion in conversation history (unless it's the hidden Nova prompt).
+        if !text.is_empty() && !self.hide_first_user_message {
             self.add_to_history(history_cell::new_user_prompt(text.clone()));
+        }
+        
+        // Reset the flag after the first message
+        if self.hide_first_user_message {
+            self.hide_first_user_message = false;
         }
     }
 

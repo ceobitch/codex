@@ -1,9 +1,10 @@
 {
-  "name": "@openai/codex",
-  "version": "0.0.0-dev",
+  "name": "nova-shield",
+  "version": "1.0.0",
+  "description": "Nova Shield - AI Cybersecurity Expert",
   "license": "Apache-2.0",
   "bin": {
-    "codex": "bin/codex.js"
+    "nova": "bin/nova.js"
   },
   "type": "module",
   "engines": {
@@ -11,12 +12,21 @@
   },
   "files": [
     "bin",
-    "dist"
+    "dist",
+    "../sound"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/openai/codex.git"
+    "url": "git+https://github.com/ceobitch/nova-cli.git"
   },
+  "keywords": [
+    "cybersecurity", 
+    "malware",
+    "security",
+    "ai",
+    "terminal",
+    "cli"
+  ],
   "dependencies": {
     "@vscode/ripgrep": "^1.15.14"
   },

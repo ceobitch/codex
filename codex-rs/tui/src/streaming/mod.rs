@@ -77,5 +77,5 @@ impl HeaderEmitter {
 
 fn render_header_line() -> ratatui::text::Line<'static> {
     use ratatui::style::Stylize;
-    ratatui::text::Line::from("codex".magenta().bold())
+    ratatui::text::Line::from("nova".cyan().bold())
 }

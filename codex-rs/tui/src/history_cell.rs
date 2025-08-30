@@ -2,7 +2,7 @@ use crate::diff_render::create_diff_summary;
 use crate::exec_command::relativize_to_home;
 use crate::exec_command::strip_bash_lc_and_escape;
 use crate::markdown::append_markdown;
-use crate::slash_command::SlashCommand;
+
 use crate::text_formatting::format_and_truncate_tool_result;
 use base64::Engine;
 use codex_ansi_escape::ansi_escape_line;
@@ -288,7 +288,6 @@ pub(crate) fn new_session_info(
                 Span::raw(format!(" {cwd_str}")).dim(),
             ]),
             Line::from("".dim()),
-            Line::from(" Ready to secure your system. Type /nova for cybersecurity mode.".dim()),
         ];
         
         // Combine ASCII art lines with session info lines

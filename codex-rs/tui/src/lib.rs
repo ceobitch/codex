@@ -19,6 +19,7 @@ use codex_ollama::DEFAULT_OSS_MODEL;
 use codex_protocol::config_types::SandboxMode;
 use std::fs::OpenOptions;
 use std::path::PathBuf;
+use tokio::fs;
 use tracing::error;
 use tracing_appender::non_blocking;
 use tracing_subscriber::EnvFilter;
@@ -44,12 +45,14 @@ mod history_cell;
 pub mod insert_history;
 pub mod live_wrap;
 mod markdown;
+mod nova_startup_widget;
 mod markdown_stream;
 pub mod onboarding;
 mod pager_overlay;
 mod render;
 mod session_log;
 mod shimmer;
+mod sound;
 mod slash_command;
 mod status_indicator_widget;
 mod streaming;
@@ -73,6 +76,21 @@ use crate::onboarding::onboarding_screen::run_onboarding_app;
 use crate::tui::Tui;
 
 // (tests access modules directly within the crate)
+
+/// Load the Nova prompt from ~/.codex/prompts/nova.md
+async fn load_nova_prompt(codex_home: &PathBuf) -> Option<String> {
+    let nova_prompt_path = codex_home.join("prompts").join("nova.md");
+    match fs::read_to_string(&nova_prompt_path).await {
+        Ok(content) => {
+            tracing::info!("Auto-loaded Nova prompt from {:?}", nova_prompt_path);
+            Some(content)
+        }
+        Err(e) => {
+            tracing::warn!("Could not load Nova prompt from {:?}: {}", nova_prompt_path, e);
+            None
+        }
+    }
+}
 
 pub async fn run_main(
     cli: Cli,
@@ -301,7 +319,10 @@ async fn run_ratatui_app(
     // Initialize high-fidelity session event logging if enabled.
     session_log::maybe_init(&config);
 
-    let Cli { prompt, images, .. } = cli;
+    let Cli { prompt: _cli_prompt, images, .. } = cli;
+
+    // Auto-load Nova prompt instead of CLI prompt
+    let nova_prompt = load_nova_prompt(&config.codex_home).await;
 
     let auth_manager = AuthManager::shared(config.codex_home.clone(), config.preferred_auth_method);
     let login_status = get_login_status(&config);
@@ -327,7 +348,7 @@ async fn run_ratatui_app(
         }
     }
 
-    let app_result = App::run(&mut tui, auth_manager, config, prompt, images).await;
+    let app_result = App::run(&mut tui, auth_manager, config, nova_prompt, images).await;
 
     restore();
     // Mark the end of the recorded session.

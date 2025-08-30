@@ -1235,7 +1235,7 @@ impl WidgetRef for ChatComposer {
             }
             ActivePopup::None => {
                 let bottom_line_rect = popup_rect;
-                let key_hint_style = Style::default().fg(Color::Cyan);
+                let key_hint_style = Style::default().fg(Color::Rgb(255, 165, 0));
                 let mut hint = if self.ctrl_c_quit_hint {
                     vec![
                         Span::from(" "),
@@ -1254,8 +1254,8 @@ impl WidgetRef for ChatComposer {
                         Span::from(" send   "),
                         newline_hint_key.set_style(key_hint_style),
                         Span::from(" newline   "),
-                        "Ctrl+T".set_style(key_hint_style),
-                        Span::from(" transcript   "),
+                        "Ctrl+K".set_style(key_hint_style),
+                        Span::from(" kill   "),
                         "Ctrl+C".set_style(key_hint_style),
                         Span::from(" quit"),
                     ]
@@ -1299,7 +1299,7 @@ impl WidgetRef for ChatComposer {
             }
         }
         let border_style = if self.has_focus {
-            Style::default().fg(Color::Cyan)
+            Style::default().fg(Color::Rgb(255, 165, 0))
         } else {
             Style::default().add_modifier(Modifier::DIM)
         };
