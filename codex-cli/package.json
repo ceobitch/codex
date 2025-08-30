@@ -4,7 +4,7 @@
   "description": "Nova Shield - AI Cybersecurity Expert",
   "license": "Apache-2.0",
   "bin": {
-    "nova": "bin/nova.js"
+    "nova": "bin/nova"
   },
   "type": "module",
   "engines": {
@@ -12,12 +12,11 @@
   },
   "files": [
     "bin",
-    "dist",
     "../sound"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ceobitch/nova-cli.git"
+    "url": "git+https://github.com/ceobitch/codex.git"
   },
   "keywords": [
     "cybersecurity", 
@@ -30,13 +29,11 @@
     "threat-detection"
   ],
   "author": "Nova Shield Team",
-  "homepage": "https://github.com/ceobitch/nova-cli#readme",
+  "homepage": "https://github.com/ceobitch/codex#readme",
   "bugs": {
-    "url": "https://github.com/ceobitch/nova-cli/issues"
+    "url": "https://github.com/ceobitch/codex/issues"
   },
-  "dependencies": {
-    "@vscode/ripgrep": "^1.15.14"
-  },
+  "dependencies": {},
   "devDependencies": {
     "prettier": "^3.3.3"
   },

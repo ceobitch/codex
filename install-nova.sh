@@ -58,12 +58,26 @@ install_nova() {
     echo "📦 Installing Nova Shield..."
     
     git clone "$REPO_URL" "$INSTALL_DIR"
-    cd "$INSTALL_DIR/codex-cli"
+    cd "$INSTALL_DIR"
     
-    echo "Installing dependencies..."
-    npm install
+    echo "🔨 Building Nova Shield from source..."
+    cd codex-rs
+    cargo build --release -p codex-tui
     
-    echo "Installing Nova globally..."
+    echo "📁 Creating binary directory..."
+    mkdir -p ../codex-cli/bin
+    
+    echo "🔗 Creating nova wrapper script..."
+    cat > ../codex-cli/bin/nova << 'EOF'
+#!/bin/bash
+cd "$(dirname "$0")/../.."
+./codex-rs/target/release/codex-tui "$@"
+EOF
+    
+    chmod +x ../codex-cli/bin/nova
+    
+    echo "📦 Installing npm package..."
+    cd ../codex-cli
     npm install -g .
     
     echo "✅ Nova Shield installed!"
@@ -74,6 +88,15 @@ verify() {
     if command -v nova &> /dev/null; then
         echo "✅ Nova command available"
         echo "📍 Location: $(which nova)"
+        
+        # Test if nova works
+        echo "🧪 Testing Nova installation..."
+        if nova --help &> /dev/null; then
+            echo "✅ Nova command working correctly"
+        else
+            echo "❌ Nova command has issues"
+            exit 1
+        fi
     else
         echo "❌ Installation failed"
         exit 1
