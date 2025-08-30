@@ -1,30 +1,5 @@
 #!/bin/bash
 cd "$(dirname "$0")/codex-rs"
 
-# Check if in development environment
-if [[ -f "../.git/config" ]] && grep -q "github.com.*nova-cli" "../.git/config" 2>/dev/null; then
-    # Development environment - show build output
-    cargo run -p codex-tui
-else
-    # End user installation - show animated loading in orange
-    ORANGE='\033[38;5;208m'
-    RESET='\033[0m'
-    
-    # Start cargo in background
-    cargo run -p codex-tui --quiet 2>/dev/null &
-    CARGO_PID=$!
-    
-    # Animated ORCA spinner in orange
-    SPINNER="⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
-    while kill -0 $CARGO_PID 2>/dev/null; do
-        for (( i=0; i<${#SPINNER}; i++ )); do
-            echo -ne "\r${ORANGE}${SPINNER:$i:1}  Nova Shield initializing...${RESET}"
-            sleep 0.08
-            if ! kill -0 $CARGO_PID 2>/dev/null; then break 2; fi
-        done
-    done
-    
-    # Clear the loading line and wait for cargo to finish
-    echo -ne "\r\033[K"
-    wait $CARGO_PID
-fi
+# Run Nova Shield directly - no frozen spinner
+cargo run -p codex-tui
