@@ -57,17 +57,42 @@ cleanup() {
 install_nova() {
     echo "📦 Installing Nova Shield..."
     
+    # Clone repository
+    echo "📥 Cloning repository..."
     git clone "$REPO_URL" "$INSTALL_DIR"
-    cd "$INSTALL_DIR"
     
+    # Verify clone
+    if [ ! -d "$INSTALL_DIR" ]; then
+        echo "❌ Failed to clone repository"
+        exit 1
+    fi
+    
+    echo "✅ Repository cloned to $INSTALL_DIR"
+    
+    # Build Nova from source
     echo "🔨 Building Nova Shield from source..."
-    cd codex-rs
+    cd "$INSTALL_DIR/codex-rs"
+    
+    if [ ! -f "Cargo.toml" ]; then
+        echo "❌ Cargo.toml not found in $INSTALL_DIR/codex-rs"
+        exit 1
+    fi
+    
+    echo "📦 Building with cargo..."
     cargo build --release -p codex-tui
     
-    echo "📁 Creating binary directory..."
+    # Verify build
+    if [ ! -f "target/release/codex-tui" ]; then
+        echo "❌ Build failed - codex-tui binary not found"
+        exit 1
+    fi
+    
+    echo "✅ Nova built successfully"
+    
+    # Create wrapper script
+    echo "📁 Creating nova wrapper script..."
     mkdir -p ../codex-cli/bin
     
-    echo "🔗 Creating nova wrapper script..."
     cat > ../codex-cli/bin/nova << 'EOF'
 #!/bin/bash
 cd "$(dirname "$0")/../.."
@@ -76,8 +101,23 @@ EOF
     
     chmod +x ../codex-cli/bin/nova
     
+    # Verify wrapper script
+    if [ ! -x "../codex-cli/bin/nova" ]; then
+        echo "❌ Failed to create nova wrapper script"
+        exit 1
+    fi
+    
+    echo "✅ Nova wrapper script created"
+    
+    # Install npm package
     echo "📦 Installing npm package..."
     cd ../codex-cli
+    
+    if [ ! -f "package.json" ]; then
+        echo "❌ package.json not found in $INSTALL_DIR/codex-cli"
+        exit 1
+    fi
+    
     npm install -g .
     
     echo "✅ Nova Shield installed!"
@@ -85,12 +125,14 @@ EOF
 
 # Verify installation
 verify() {
+    echo "🧪 Verifying installation..."
+    
     if command -v nova &> /dev/null; then
         echo "✅ Nova command available"
         echo "📍 Location: $(which nova)"
         
         # Test if nova works
-        echo "🧪 Testing Nova installation..."
+        echo "🧪 Testing Nova command..."
         if nova --help &> /dev/null; then
             echo "✅ Nova command working correctly"
         else
@@ -98,13 +140,15 @@ verify() {
             exit 1
         fi
     else
-        echo "❌ Installation failed"
+        echo "❌ Installation failed - nova command not found"
         exit 1
     fi
 }
 
 # Main flow
 main() {
+    echo "🚀 Starting Nova Shield installation..."
+    
     check_node
     check_git
     check_rust
