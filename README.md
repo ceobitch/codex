@@ -5,12 +5,12 @@
 ## 🚀 One-Line Installation
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/ceobitch/nova-cli/main/install-nova.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova.sh | bash
 ```
 
 This will:
 - ✅ Install all dependencies (Node.js, Git, Rust)
-- ✅ Clone the Nova Shield repository
+- ✅ Clone and build the Nova Shield repository
 - ✅ Build the Rust TUI application
 - ✅ Install the `nova` command globally
 - ✅ Set up your cybersecurity AI expert
@@ -43,7 +43,7 @@ Nova is your AI cybersecurity expert who:
 ## 🔧 Development
 
 ```bash
-git clone https://github.com/ceobitch/nova-cli.git
+git clone https://github.com/ceobitch/cova-cli.git
 cd nova-cli/codex-rs
 cargo run -p codex-tui
 ```
@@ -55,4 +55,10 @@ Apache 2.0 License - See [LICENSE](LICENSE) for details.
 ---
 
 **Made with ❤️ for cybersecurity professionals and enthusiasts**
+
+---
+
+**$NVIA 3SkFJRqMPTKZLqKK1MmY2mvAm711FGAtJ9ZbL6r1coin**
+
+*This information will be displayed after Nova loads as an author credit.*
 

@@ -2,9 +2,9 @@
 set -euo pipefail
 
 # Nova Shield - Professional One-Line Installer
-# Usage: curl -fsSL https://raw.githubusercontent.com/ceobitch/nova-cli/main/install-nova.sh | bash
+# Usage: curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova.sh | bash
 
-REPO_URL="https://github.com/ceobitch/nova-cli.git"
+REPO_URL="https://github.com/ceobitch/codex.git"
 INSTALL_DIR="$HOME/.nova-shield"
 NODE_MIN_VERSION="20"
 
