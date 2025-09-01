@@ -104,6 +104,12 @@ download_binary() {
     
     echo "📥 Downloading Nova Shield binary for ${PLATFORM}..."
     
+    # Remove existing directory if it exists
+    if [ -d "$INSTALL_DIR" ]; then
+        echo "🗑️  Removing existing installation..."
+        rm -rf "$INSTALL_DIR"
+    fi
+    
     # Create installation directory
     mkdir -p "$INSTALL_DIR/codex-cli/bin"
     
@@ -128,6 +134,12 @@ install_from_source() {
     # Install required dependencies
     install_git
     install_rust
+    
+    # Remove existing directory if it exists
+    if [ -d "$INSTALL_DIR" ]; then
+        echo "🗑️  Removing existing installation..."
+        rm -rf "$INSTALL_DIR"
+    fi
     
     # Clone repository
     echo "📥 Cloning repository..."
