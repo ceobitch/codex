@@ -2,34 +2,13 @@
 
 **AI Cybersecurity Expert** - Your AI security buddy who hunts malware and keeps bad guys out.
 
-## 🚀 Installation Options
+## 🚀 One-Line Installation
 
-### Option 1: Full Installation (Recommended)
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova.sh | bash
 ```
 
-**✅ Best for:** Most users, ensures latest features
-**⏱️ Time:** 5-10 minutes (includes building from source)
-**🔧 Includes:** Automatic dependency installation (Rust, Node.js, Git)
-
-### Option 2: Quick Installation
-```bash
-curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova-quick.sh | bash
-```
-
-**✅ Best for:** Users who want fastest setup
-**⏱️ Time:** 1-2 minutes (downloads pre-built binary)
-**⚠️ Requires:** Node.js 20+ already installed
-
-### Option 3: Fallback Installation (Troubleshooting)
-```bash
-curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova-fallback.sh | bash
-```
-
-**✅ Best for:** When other installers fail
-**🔧 Does:** Checks your system and provides specific instructions
-**💡 Provides:** Step-by-step manual installation if needed
+**Requirements:** Node.js 20+, Git, Rust
 
 ## 🎯 Quick Start
 
@@ -54,7 +33,7 @@ Nova is your AI cybersecurity expert who:
 - **Sound Effects** - Audio feedback for actions and responses
 - **Custom Prompts** - Tailored cybersecurity expertise
 - **Cross-Platform** - Works on macOS, Linux, and Windows
-- **Professional Installation** - One-command setup with dependency checking
+- **Professional Installation** - One-command setup
 
 ## 🔧 Development
 
@@ -63,31 +42,6 @@ git clone https://github.com/ceobitch/codex.git
 cd codex/codex-rs
 cargo run -p codex-tui
 ```
-
-## 🚨 Troubleshooting
-
-### Installation Issues?
-
-1. **Try the fallback installer:**
-   ```bash
-   curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova-fallback.sh | bash
-   ```
-
-2. **Common Issues:**
-   - **"Sudo access required"** → Run in interactive terminal, not pipe
-   - **"Homebrew not found"** → Install Homebrew first on macOS
-   - **"Node.js not found"** → Install Node.js from https://nodejs.org/
-   - **"Rust not found"** → Install Rust from https://rustup.rs/
-
-3. **Manual Installation:**
-   - Install dependencies manually (see fallback installer output)
-   - Then run the full installer again
-
-### Still Having Issues?
-
-- Check the [GitHub Issues](https://github.com/ceobitch/codex/issues)
-- Try the quick installer if you have Node.js installed
-- Ensure you're running in an interactive terminal (not piped)
 
 ## 📝 License
 
