@@ -2,14 +2,15 @@
 
 **AI Cybersecurity Expert** - Your AI security buddy who hunts malware and keeps bad guys out.
 
-## 🚀 One-Line Installation
+## 🚀 Super Simple Installation
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova.sh | bash
 ```
 
-**⚡ Fast Installation** - Downloads pre-built binary (seconds)
-**Requirements:** Node.js 20+ only
+**✨ Zero Setup Required** - Automatically installs everything needed
+**⚡ Lightning Fast** - Downloads pre-built binary (seconds)
+**🎯 Works for Everyone** - No technical knowledge required
 
 ## 🎯 Quick Start
 
@@ -34,7 +35,7 @@ Nova is your AI cybersecurity expert who:
 - **Sound Effects** - Audio feedback for actions and responses
 - **Custom Prompts** - Tailored cybersecurity expertise
 - **Cross-Platform** - Works on macOS, Linux, and Windows
-- **Lightning Fast Installation** - Pre-built binaries for instant setup
+- **Zero Configuration** - Works out of the box for everyone
 
 ## 🔧 Development
 

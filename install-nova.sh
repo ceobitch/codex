@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-# Nova Shield - Binary Installer
+# Nova Shield - Super Simple Installer for Everyone
 # Usage: curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova.sh | bash
 
 INSTALL_DIR="$HOME/.nova-shield"
@@ -10,12 +10,62 @@ NODE_MIN_VERSION="20"
 echo "🛡️ Installing Nova Shield - AI Cybersecurity Expert"
 echo "=================================================="
 
-# Check if running in interactive mode
-if [[ ! -t 0 ]]; then
-    echo "⚠️  Running in non-interactive mode"
-    echo "   Make sure you have Node.js installed first: https://nodejs.org/"
-    echo ""
-fi
+# Detect OS
+detect_os() {
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        echo "linux"
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+        echo "macos"
+    elif [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "cygwin" ]]; then
+        echo "windows"
+    else
+        echo "unknown"
+    fi
+}
+
+# Install Homebrew (macOS)
+install_homebrew() {
+    if ! command -v brew &> /dev/null; then
+        echo "🍺 Installing Homebrew..."
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        
+        # Add Homebrew to PATH for current session
+        if [[ -f "/opt/homebrew/bin/brew" ]]; then
+            export PATH="/opt/homebrew/bin:$PATH"
+        elif [[ -f "/usr/local/bin/brew" ]]; then
+            export PATH="/usr/local/bin:$PATH"
+        fi
+    fi
+    echo "✅ Homebrew available"
+}
+
+# Install Node.js automatically
+install_node() {
+    if ! command -v node &> /dev/null; then
+        echo "📦 Installing Node.js..."
+        OS=$(detect_os)
+        
+        if [[ "$OS" == "macos" ]]; then
+            install_homebrew
+            brew install node
+        elif [[ "$OS" == "linux" ]]; then
+            curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+        else
+            echo "❌ Automatic Node.js installation not supported for this OS"
+            echo "Please install Node.js manually from: https://nodejs.org/"
+            exit 1
+        fi
+    fi
+    
+    NODE_VERSION=$(node --version | sed 's/v//' | cut -d. -f1)
+    if [ "$NODE_VERSION" -lt "$NODE_MIN_VERSION" ]; then
+        echo "❌ Node.js ${NODE_VERSION} too old. Need ${NODE_MIN_VERSION}+"
+        echo "Please update Node.js from: https://nodejs.org/"
+        exit 1
+    fi
+    echo "✅ Node.js $(node --version)"
+}
 
 # Detect OS and architecture
 detect_platform() {
@@ -35,25 +85,6 @@ detect_platform() {
     esac
     
     echo "${ARCH}-${OS}"
-}
-
-# Check Node.js
-check_node() {
-    if ! command -v node &> /dev/null; then
-        echo "❌ Node.js ${NODE_MIN_VERSION}+ required. Install from: https://nodejs.org/"
-        echo ""
-        echo "💡 Quick install:"
-        echo "   macOS: brew install node"
-        echo "   Linux: curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - && sudo apt-get install -y nodejs"
-        exit 1
-    fi
-    
-    NODE_VERSION=$(node --version | sed 's/v//' | cut -d. -f1)
-    if [ "$NODE_VERSION" -lt "$NODE_MIN_VERSION" ]; then
-        echo "❌ Node.js ${NODE_VERSION} too old. Need ${NODE_MIN_VERSION}+: https://nodejs.org/"
-        exit 1
-    fi
-    echo "✅ Node.js $(node --version)"
 }
 
 # Clean installation
@@ -148,7 +179,7 @@ verify() {
 main() {
     echo "🚀 Starting Nova Shield installation..."
     
-    check_node
+    install_node
     cleanup
     download_binary
     install_npm_package
@@ -166,7 +197,7 @@ main() {
     echo ""
     echo "🔥 Get started: nova"
     echo ""
-    echo "💡 Installation completed in seconds using pre-built binary!"
+    echo "💡 Installation completed automatically!"
 }
 
 main "$@"
