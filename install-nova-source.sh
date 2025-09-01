@@ -95,7 +95,7 @@ install_nova() {
     
     cat > ../codex-cli/bin/nova << 'EOF'
 #!/bin/bash
-cd "$(dirname "$0")/../.."
+cd "$HOME/.nova-shield"
 ./codex-rs/target/release/codex-tui "$@"
 EOF
     
