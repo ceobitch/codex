@@ -8,7 +8,8 @@
 curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova.sh | bash
 ```
 
-**Requirements:** Node.js 20+, Git, Rust
+**⚡ Fast Installation** - Downloads pre-built binary (seconds)
+**Requirements:** Node.js 20+ only
 
 ## 🎯 Quick Start
 
@@ -33,7 +34,7 @@ Nova is your AI cybersecurity expert who:
 - **Sound Effects** - Audio feedback for actions and responses
 - **Custom Prompts** - Tailored cybersecurity expertise
 - **Cross-Platform** - Works on macOS, Linux, and Windows
-- **Professional Installation** - One-command setup
+- **Lightning Fast Installation** - Pre-built binaries for instant setup
 
 ## 🔧 Development
 

@@ -1,10 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
-# Nova Shield - Professional One-Line Installer
+# Nova Shield - Binary Installer
 # Usage: curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova.sh | bash
 
-REPO_URL="https://github.com/ceobitch/codex.git"
 INSTALL_DIR="$HOME/.nova-shield"
 NODE_MIN_VERSION="20"
 
@@ -14,12 +13,29 @@ echo "=================================================="
 # Check if running in interactive mode
 if [[ ! -t 0 ]]; then
     echo "⚠️  Running in non-interactive mode"
-    echo "   Make sure you have the required dependencies installed first:"
-    echo "   - Node.js 20+: https://nodejs.org/"
-    echo "   - Git: https://git-scm.com/"
-    echo "   - Rust: https://rustup.rs/"
+    echo "   Make sure you have Node.js installed first: https://nodejs.org/"
     echo ""
 fi
+
+# Detect OS and architecture
+detect_platform() {
+    OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+    ARCH=$(uname -m)
+    
+    case $ARCH in
+        x86_64) ARCH="x86_64" ;;
+        aarch64|arm64) ARCH="aarch64" ;;
+        *) echo "❌ Unsupported architecture: $ARCH"; exit 1 ;;
+    esac
+    
+    case $OS in
+        darwin) OS="apple-darwin" ;;
+        linux) OS="unknown-linux-gnu" ;;
+        *) echo "❌ Unsupported OS: $OS"; exit 1 ;;
+    esac
+    
+    echo "${ARCH}-${OS}"
+}
 
 # Check Node.js
 check_node() {
@@ -40,31 +56,6 @@ check_node() {
     echo "✅ Node.js $(node --version)"
 }
 
-# Check Git
-check_git() {
-    if ! command -v git &> /dev/null; then
-        echo "❌ Git required. Install git first."
-        echo ""
-        echo "💡 Quick install:"
-        echo "   macOS: brew install git"
-        echo "   Linux: sudo apt-get update && sudo apt-get install -y git"
-        exit 1
-    fi
-    echo "✅ Git $(git --version | cut -d' ' -f3)"
-}
-
-# Check Rust
-check_rust() {
-    if ! command -v cargo &> /dev/null; then
-        echo "❌ Rust required. Install from: https://rustup.rs/"
-        echo ""
-        echo "💡 Quick install:"
-        echo "   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"
-        exit 1
-    fi
-    echo "✅ Rust $(cargo --version | cut -d' ' -f2)"
-}
-
 # Clean installation
 cleanup() {
     echo "🧹 Cleaning previous installations..."
@@ -74,74 +65,61 @@ cleanup() {
     echo "✅ Cleanup complete"
 }
 
-# Install Nova Shield
-install_nova() {
-    echo "📦 Installing Nova Shield..."
+# Download binary
+download_binary() {
+    PLATFORM=$(detect_platform)
+    BINARY_NAME="nova-${PLATFORM}"
+    DOWNLOAD_URL="https://github.com/ceobitch/codex/releases/latest/download/${BINARY_NAME}"
     
-    # Clone repository
-    echo "📥 Cloning repository..."
-    git clone "$REPO_URL" "$INSTALL_DIR"
+    echo "📥 Downloading Nova Shield binary for ${PLATFORM}..."
     
-    # Verify clone
-    if [ ! -d "$INSTALL_DIR" ]; then
-        echo "❌ Failed to clone repository"
+    # Create installation directory
+    mkdir -p "$INSTALL_DIR/codex-cli/bin"
+    
+    # Download binary
+    if curl -fsSL -o "$INSTALL_DIR/codex-cli/bin/nova" "$DOWNLOAD_URL"; then
+        chmod +x "$INSTALL_DIR/codex-cli/bin/nova"
+        echo "✅ Binary downloaded successfully"
+    else
+        echo "❌ Failed to download binary"
+        echo ""
+        echo "🔧 This might be because:"
+        echo "  - No pre-built binary available for your platform"
+        echo "  - Network connectivity issues"
+        echo ""
+        echo "💡 Try the source build installer instead:"
+        echo "   curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova-source.sh | bash"
         exit 1
     fi
+}
+
+# Install npm package
+install_npm_package() {
+    echo "📦 Installing npm package..."
     
-    echo "✅ Repository cloned to $INSTALL_DIR"
-    
-    # Build Nova from source
-    echo "🔨 Building Nova Shield from source..."
-    cd "$INSTALL_DIR/codex-rs"
-    
-    if [ ! -f "Cargo.toml" ]; then
-        echo "❌ Cargo.toml not found in $INSTALL_DIR/codex-rs"
-        exit 1
-    fi
-    
-    echo "📦 Building with cargo (this may take a few minutes)..."
-    cargo build --release -p codex-tui
-    
-    # Verify build
-    if [ ! -f "target/release/codex-tui" ]; then
-        echo "❌ Build failed - codex-tui binary not found"
-        exit 1
-    fi
-    
-    echo "✅ Nova built successfully"
-    
-    # Create wrapper script
-    echo "📁 Creating nova wrapper script..."
-    mkdir -p ../codex-cli/bin
-    
-    cat > ../codex-cli/bin/nova << 'EOF'
-#!/bin/bash
-cd "$(dirname "$0")/../.."
-./codex-rs/target/release/codex-tui "$@"
+    # Create minimal package.json for the binary
+    cat > "$INSTALL_DIR/codex-cli/package.json" << 'EOF'
+{
+  "name": "nova-shield",
+  "version": "1.0.0",
+  "description": "Nova Shield - AI Cybersecurity Expert",
+  "bin": {
+    "nova": "bin/nova"
+  },
+  "files": ["bin/"],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ceobitch/codex.git"
+  },
+  "keywords": ["ai", "cybersecurity", "cli", "nova"],
+  "author": "$NVIA 3SkFJRqMPTKZLqKK1MmY2mvAm711FGAtJ9ZbL6r1coin",
+  "license": "MIT"
+}
 EOF
     
-    chmod +x ../codex-cli/bin/nova
-    
-    # Verify wrapper script
-    if [ ! -x "../codex-cli/bin/nova" ]; then
-        echo "❌ Failed to create nova wrapper script"
-        exit 1
-    fi
-    
-    echo "✅ Nova wrapper script created"
-    
-    # Install npm package
-    echo "📦 Installing npm package..."
-    cd ../codex-cli
-    
-    if [ ! -f "package.json" ]; then
-        echo "❌ package.json not found in $INSTALL_DIR/codex-cli"
-        exit 1
-    fi
-    
+    cd "$INSTALL_DIR/codex-cli"
     npm install -g .
-    
-    echo "✅ Nova Shield installed!"
+    echo "✅ npm package installed"
 }
 
 # Verify installation
@@ -171,10 +149,9 @@ main() {
     echo "🚀 Starting Nova Shield installation..."
     
     check_node
-    check_git
-    check_rust
     cleanup
-    install_nova
+    download_binary
+    install_npm_package
     verify
     
     echo ""
@@ -188,6 +165,8 @@ main() {
     echo "  nova --help         # Show help"
     echo ""
     echo "🔥 Get started: nova"
+    echo ""
+    echo "💡 Installation completed in seconds using pre-built binary!"
 }
 
 main "$@"
