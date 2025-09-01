@@ -99,6 +99,12 @@ cleanup() {
         rm -rf "$INSTALL_DIR"
     fi
     
+    # Double-check and force remove if still exists
+    if [ -d "$INSTALL_DIR" ]; then
+        echo "🔧 Force removing directory..."
+        sudo rm -rf "$INSTALL_DIR" 2>/dev/null || rm -rf "$INSTALL_DIR"
+    fi
+    
     echo "✅ Cleanup complete"
 }
 
@@ -282,8 +288,10 @@ verify() {
 main() {
     echo "🚀 Starting Nova Shield installation..."
     
-    install_node
+    # Clean up any existing installation first
     cleanup
+    
+    install_node
     
     if ! download_binary; then
         install_from_source
