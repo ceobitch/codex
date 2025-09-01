@@ -38,6 +38,7 @@
     "prettier": "^3.3.3"
   },
   "scripts": {
-    "postinstall": "echo '🛡️ Nova Shield installed successfully! Run: nova'"
+    "postinstall": "echo '🛡️ Nova Shield installed successfully! Run: nova'",
+    "uninstall": "node -e \"const fs=require('fs');const path=require('path');const home=require('os').homedir();const novaDir=path.join(home,'.nova-shield');if(fs.existsSync(novaDir)){fs.rmSync(novaDir,{recursive:true,force:true});console.log('✅ Nova Shield files removed');}else{console.log('❌ Nova Shield not found');}\""
   }
 }

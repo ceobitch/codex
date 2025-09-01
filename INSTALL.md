@@ -20,6 +20,17 @@
 curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova.sh | bash
 ```
 
+## 🗑️ **Uninstall Nova Shield**
+
+### **Command Line:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/uninstall-nova.sh | bash
+```
+
+### **Click to Uninstall:**
+- **macOS:** Download `uninstall-nova.command` and double-click
+- **Windows:** Download `uninstall-nova.bat` and double-click
+
 ## 🚀 **Quick Start**
 
 After installation:
