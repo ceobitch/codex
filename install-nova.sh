@@ -116,11 +116,13 @@ download_binary() {
     
     echo "📥 Downloading Nova Shield binary for ${PLATFORM}..."
     
-    # Create installation directory
-    mkdir -p "$INSTALL_DIR/codex-cli/bin"
+    # Download binary to temp location first
+    TEMP_BINARY="/tmp/nova-${PLATFORM}"
     
-    # Download binary
-    if curl -fsSL -o "$INSTALL_DIR/codex-cli/bin/nova" "$DOWNLOAD_URL"; then
+    if curl -fsSL -o "$TEMP_BINARY" "$DOWNLOAD_URL"; then
+        # Create installation directory only if download succeeds
+        mkdir -p "$INSTALL_DIR/codex-cli/bin"
+        mv "$TEMP_BINARY" "$INSTALL_DIR/codex-cli/bin/nova"
         chmod +x "$INSTALL_DIR/codex-cli/bin/nova"
         echo "✅ Binary downloaded successfully"
         return 0
