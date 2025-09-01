@@ -2,18 +2,25 @@
 
 **AI Cybersecurity Expert** - Your AI security buddy who hunts malware and keeps bad guys out.
 
-## 🚀 One-Line Installation
+## 🚀 Installation Options
 
+### Option 1: Full Installation (Recommended)
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova.sh | bash
 ```
 
-This will:
-- ✅ Install all dependencies (Node.js, Git, Rust)
-- ✅ Clone and build the Nova Shield repository
-- ✅ Build the Rust TUI application
-- ✅ Install the `nova` command globally
-- ✅ Set up your cybersecurity AI expert
+**✅ Best for:** Most users, ensures latest features
+**⏱️ Time:** 5-10 minutes (includes building from source)
+**🔧 Includes:** Automatic dependency installation (Rust, Node.js, Git)
+
+### Option 2: Quick Installation
+```bash
+curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova-quick.sh | bash
+```
+
+**✅ Best for:** Users who want fastest setup
+**⏱️ Time:** 1-2 minutes (downloads pre-built binary)
+**⚠️ Requires:** Node.js 20+ already installed
 
 ## 🎯 Quick Start
 
@@ -43,8 +50,8 @@ Nova is your AI cybersecurity expert who:
 ## 🔧 Development
 
 ```bash
-git clone https://github.com/ceobitch/cova-cli.git
-cd nova-cli/codex-rs
+git clone https://github.com/ceobitch/codex.git
+cd codex/codex-rs
 cargo run -p codex-tui
 ```
 

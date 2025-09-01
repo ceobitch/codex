@@ -11,37 +11,108 @@ NODE_MIN_VERSION="20"
 echo "🛡️ Installing Nova Shield - AI Cybersecurity Expert"
 echo "=================================================="
 
-# Check Node.js
-check_node() {
+# Detect OS
+detect_os() {
+    if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        echo "linux"
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+        echo "macos"
+    elif [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "cygwin" ]]; then
+        echo "windows"
+    else
+        echo "unknown"
+    fi
+}
+
+# Install Homebrew (macOS)
+install_homebrew() {
+    if ! command -v brew &> /dev/null; then
+        echo "🍺 Installing Homebrew..."
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+        
+        # Add Homebrew to PATH for current session
+        if [[ -f "/opt/homebrew/bin/brew" ]]; then
+            export PATH="/opt/homebrew/bin:$PATH"
+        elif [[ -f "/usr/local/bin/brew" ]]; then
+            export PATH="/usr/local/bin:$PATH"
+        fi
+    fi
+    echo "✅ Homebrew available"
+}
+
+# Install Rust
+install_rust() {
+    if ! command -v cargo &> /dev/null; then
+        echo "🦀 Installing Rust..."
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+        
+        # Source Rust environment
+        source "$HOME/.cargo/env"
+        export PATH="$HOME/.cargo/bin:$PATH"
+    fi
+    echo "✅ Rust $(cargo --version | cut -d' ' -f2)"
+}
+
+# Install Node.js
+install_node() {
     if ! command -v node &> /dev/null; then
-        echo "❌ Node.js ${NODE_MIN_VERSION}+ required. Install from: https://nodejs.org/"
-        exit 1
+        echo "📦 Installing Node.js..."
+        OS=$(detect_os)
+        
+        if [[ "$OS" == "macos" ]]; then
+            # Install Homebrew if needed
+            install_homebrew
+            brew install node
+        elif [[ "$OS" == "linux" ]]; then
+            # Use NodeSource repository for Linux
+            curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+        else
+            echo "❌ Automatic Node.js installation not supported for this OS"
+            echo "Please install Node.js manually from: https://nodejs.org/"
+            exit 1
+        fi
     fi
     
     NODE_VERSION=$(node --version | sed 's/v//' | cut -d. -f1)
     if [ "$NODE_VERSION" -lt "$NODE_MIN_VERSION" ]; then
-        echo "❌ Node.js ${NODE_VERSION} too old. Need ${NODE_MIN_VERSION}+: https://nodejs.org/"
+        echo "❌ Node.js ${NODE_VERSION} too old. Need ${NODE_MIN_VERSION}+"
+        echo "Please update Node.js from: https://nodejs.org/"
         exit 1
     fi
     echo "✅ Node.js $(node --version)"
 }
 
-# Check Git
-check_git() {
+# Install Git
+install_git() {
     if ! command -v git &> /dev/null; then
-        echo "❌ Git required. Install git first."
-        exit 1
+        echo "📚 Installing Git..."
+        OS=$(detect_os)
+        
+        if [[ "$OS" == "macos" ]]; then
+            install_homebrew
+            brew install git
+        elif [[ "$OS" == "linux" ]]; then
+            sudo apt-get update
+            sudo apt-get install -y git
+        else
+            echo "❌ Automatic Git installation not supported for this OS"
+            echo "Please install Git manually"
+            exit 1
+        fi
     fi
     echo "✅ Git $(git --version | cut -d' ' -f3)"
 }
 
-# Check Rust
-check_rust() {
-    if ! command -v cargo &> /dev/null; then
-        echo "❌ Rust required. Install from: https://rustup.rs/"
-        exit 1
-    fi
-    echo "✅ Rust $(cargo --version | cut -d' ' -f2)"
+# Check and install dependencies
+setup_dependencies() {
+    echo "🔧 Setting up dependencies..."
+    
+    install_git
+    install_rust
+    install_node
+    
+    echo "✅ All dependencies ready"
 }
 
 # Clean installation
@@ -78,7 +149,7 @@ install_nova() {
         exit 1
     fi
     
-    echo "📦 Building with cargo..."
+    echo "📦 Building with cargo (this may take a few minutes)..."
     cargo build --release -p codex-tui
     
     # Verify build
@@ -149,9 +220,7 @@ verify() {
 main() {
     echo "🚀 Starting Nova Shield installation..."
     
-    check_node
-    check_git
-    check_rust
+    setup_dependencies
     cleanup
     install_nova
     verify
