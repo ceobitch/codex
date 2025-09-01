@@ -11,6 +11,15 @@ NODE_MIN_VERSION="20"
 echo "🛡️ Installing Nova Shield - AI Cybersecurity Expert"
 echo "=================================================="
 
+# Check if running in interactive mode
+check_interactive() {
+    if [[ ! -t 0 ]]; then
+        echo "⚠️  Running in non-interactive mode"
+        echo "   Some installations may require manual intervention"
+        echo ""
+    fi
+}
+
 # Detect OS
 detect_os() {
     if [[ "$OSTYPE" == "linux-gnu"* ]]; then
@@ -24,10 +33,35 @@ detect_os() {
     fi
 }
 
-# Install Homebrew (macOS)
+# Check if user has sudo access
+check_sudo() {
+    if ! sudo -n true 2>/dev/null; then
+        echo "⚠️  Sudo access required for some installations"
+        echo "   You may be prompted for your password"
+        echo ""
+    fi
+}
+
+# Install Homebrew (macOS) with better error handling
 install_homebrew() {
     if ! command -v brew &> /dev/null; then
         echo "🍺 Installing Homebrew..."
+        
+        # Check if we can install Homebrew
+        if [[ ! -t 0 ]]; then
+            echo "❌ Cannot install Homebrew in non-interactive mode"
+            echo ""
+            echo "🔧 Manual installation required:"
+            echo "   1. Run this command in your terminal:"
+            echo "      /bin/bash -c \"\$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\""
+            echo "   2. Then run this installer again:"
+            echo "      curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova.sh | bash"
+            echo ""
+            echo "💡 Alternative: Use the quick installer (requires Node.js):"
+            echo "   curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova-quick.sh | bash"
+            exit 1
+        fi
+        
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
         
         # Add Homebrew to PATH for current session
@@ -40,10 +74,26 @@ install_homebrew() {
     echo "✅ Homebrew available"
 }
 
-# Install Rust
+# Install Rust with better error handling
 install_rust() {
     if ! command -v cargo &> /dev/null; then
         echo "🦀 Installing Rust..."
+        
+        # Check if we can install Rust
+        if [[ ! -t 0 ]]; then
+            echo "❌ Cannot install Rust in non-interactive mode"
+            echo ""
+            echo "🔧 Manual installation required:"
+            echo "   1. Run this command in your terminal:"
+            echo "      curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"
+            echo "   2. Then run this installer again:"
+            echo "      curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova.sh | bash"
+            echo ""
+            echo "💡 Alternative: Use the quick installer (requires Node.js):"
+            echo "   curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova-quick.sh | bash"
+            exit 1
+        fi
+        
         curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
         
         # Source Rust environment
@@ -53,17 +103,43 @@ install_rust() {
     echo "✅ Rust $(cargo --version | cut -d' ' -f2)"
 }
 
-# Install Node.js
+# Install Node.js with better error handling
 install_node() {
     if ! command -v node &> /dev/null; then
         echo "📦 Installing Node.js..."
         OS=$(detect_os)
         
         if [[ "$OS" == "macos" ]]; then
-            # Install Homebrew if needed
-            install_homebrew
-            brew install node
+            # Try to install Homebrew first
+            if command -v brew &> /dev/null; then
+                brew install node
+            else
+                echo "❌ Homebrew not available for Node.js installation"
+                echo ""
+                echo "🔧 Manual installation required:"
+                echo "   1. Install Node.js from: https://nodejs.org/"
+                echo "   2. Then run this installer again:"
+                echo "      curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova.sh | bash"
+                echo ""
+                echo "💡 Alternative: Use the quick installer (requires Node.js):"
+                echo "   curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova-quick.sh | bash"
+                exit 1
+            fi
         elif [[ "$OS" == "linux" ]]; then
+            # Check sudo access
+            if ! sudo -n true 2>/dev/null; then
+                echo "❌ Sudo access required for Node.js installation"
+                echo ""
+                echo "🔧 Manual installation required:"
+                echo "   1. Install Node.js from: https://nodejs.org/"
+                echo "   2. Then run this installer again:"
+                echo "      curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova.sh | bash"
+                echo ""
+                echo "💡 Alternative: Use the quick installer (requires Node.js):"
+                echo "   curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova-quick.sh | bash"
+                exit 1
+            fi
+            
             # Use NodeSource repository for Linux
             curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
             sudo apt-get install -y nodejs
@@ -83,21 +159,41 @@ install_node() {
     echo "✅ Node.js $(node --version)"
 }
 
-# Install Git
+# Install Git with better error handling
 install_git() {
     if ! command -v git &> /dev/null; then
         echo "📚 Installing Git..."
         OS=$(detect_os)
         
         if [[ "$OS" == "macos" ]]; then
-            install_homebrew
-            brew install git
+            if command -v brew &> /dev/null; then
+                brew install git
+            else
+                echo "❌ Homebrew not available for Git installation"
+                echo ""
+                echo "🔧 Manual installation required:"
+                echo "   1. Install Git from: https://git-scm.com/"
+                echo "   2. Then run this installer again:"
+                echo "      curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova.sh | bash"
+                exit 1
+            fi
         elif [[ "$OS" == "linux" ]]; then
+            # Check sudo access
+            if ! sudo -n true 2>/dev/null; then
+                echo "❌ Sudo access required for Git installation"
+                echo ""
+                echo "🔧 Manual installation required:"
+                echo "   1. Install Git from: https://git-scm.com/"
+                echo "   2. Then run this installer again:"
+                echo "      curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova.sh | bash"
+                exit 1
+            fi
+            
             sudo apt-get update
             sudo apt-get install -y git
         else
             echo "❌ Automatic Git installation not supported for this OS"
-            echo "Please install Git manually"
+            echo "Please install Git manually from: https://git-scm.com/"
             exit 1
         fi
     fi
@@ -107,6 +203,10 @@ install_git() {
 # Check and install dependencies
 setup_dependencies() {
     echo "🔧 Setting up dependencies..."
+    
+    # Check interactive mode and sudo access first
+    check_interactive
+    check_sudo
     
     install_git
     install_rust
@@ -155,6 +255,11 @@ install_nova() {
     # Verify build
     if [ ! -f "target/release/codex-tui" ]; then
         echo "❌ Build failed - codex-tui binary not found"
+        echo ""
+        echo "🔧 Troubleshooting:"
+        echo "   1. Make sure you have enough disk space"
+        echo "   2. Try running: cd $INSTALL_DIR/codex-rs && cargo build --release -p codex-tui"
+        echo "   3. Check the error messages above"
         exit 1
     fi
     
@@ -208,10 +313,20 @@ verify() {
             echo "✅ Nova command working correctly"
         else
             echo "❌ Nova command has issues"
+            echo ""
+            echo "🔧 Troubleshooting:"
+            echo "   1. Try running: nova --help"
+            echo "   2. Check if the binary exists: ls -la $INSTALL_DIR/codex-rs/target/release/"
+            echo "   3. Try reinstalling: curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova.sh | bash"
             exit 1
         fi
     else
         echo "❌ Installation failed - nova command not found"
+        echo ""
+        echo "🔧 Troubleshooting:"
+        echo "   1. Check if npm install worked: npm list -g nova-shield"
+        echo "   2. Try reinstalling: curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova.sh | bash"
+        echo "   3. Or try the quick installer: curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova-quick.sh | bash"
         exit 1
     fi
 }
