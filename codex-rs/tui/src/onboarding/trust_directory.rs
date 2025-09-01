@@ -80,7 +80,7 @@ impl WidgetRef for &TrustDirectoryWidget {
             lines.push(create_option(
                 0,
                 TrustDirectorySelection::Trust,
-                "Yes, allow Codex to work in this folder without asking for approval",
+                "Yes, allow Nova to work in this folder without asking for approval",
             ));
             lines.push(create_option(
                 1,
