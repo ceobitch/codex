@@ -92,7 +92,13 @@ cleanup() {
     echo "🧹 Cleaning previous installations..."
     pkill -f 'nova|codex' 2>/dev/null || true
     npm uninstall -g nova-shield 2>/dev/null || true
-    rm -rf "$INSTALL_DIR" 2>/dev/null || true
+    
+    # Force remove the installation directory
+    if [ -d "$INSTALL_DIR" ]; then
+        echo "🗑️  Removing existing Nova Shield directory..."
+        rm -rf "$INSTALL_DIR"
+    fi
+    
     echo "✅ Cleanup complete"
 }
 
@@ -103,12 +109,6 @@ download_binary() {
     DOWNLOAD_URL="https://github.com/ceobitch/codex/releases/latest/download/${BINARY_NAME}"
     
     echo "📥 Downloading Nova Shield binary for ${PLATFORM}..."
-    
-    # Remove existing directory if it exists
-    if [ -d "$INSTALL_DIR" ]; then
-        echo "🗑️  Removing existing installation..."
-        rm -rf "$INSTALL_DIR"
-    fi
     
     # Create installation directory
     mkdir -p "$INSTALL_DIR/codex-cli/bin"
@@ -134,12 +134,6 @@ install_from_source() {
     # Install required dependencies
     install_git
     install_rust
-    
-    # Remove existing directory if it exists
-    if [ -d "$INSTALL_DIR" ]; then
-        echo "🗑️  Removing existing installation..."
-        rm -rf "$INSTALL_DIR"
-    fi
     
     # Clone repository
     echo "📥 Cloning repository..."
