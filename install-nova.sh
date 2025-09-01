@@ -11,10 +11,24 @@ NODE_MIN_VERSION="20"
 echo "🛡️ Installing Nova Shield - AI Cybersecurity Expert"
 echo "=================================================="
 
+# Check if running in interactive mode
+if [[ ! -t 0 ]]; then
+    echo "⚠️  Running in non-interactive mode"
+    echo "   Make sure you have the required dependencies installed first:"
+    echo "   - Node.js 20+: https://nodejs.org/"
+    echo "   - Git: https://git-scm.com/"
+    echo "   - Rust: https://rustup.rs/"
+    echo ""
+fi
+
 # Check Node.js
 check_node() {
     if ! command -v node &> /dev/null; then
         echo "❌ Node.js ${NODE_MIN_VERSION}+ required. Install from: https://nodejs.org/"
+        echo ""
+        echo "💡 Quick install:"
+        echo "   macOS: brew install node"
+        echo "   Linux: curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - && sudo apt-get install -y nodejs"
         exit 1
     fi
     
@@ -30,6 +44,10 @@ check_node() {
 check_git() {
     if ! command -v git &> /dev/null; then
         echo "❌ Git required. Install git first."
+        echo ""
+        echo "💡 Quick install:"
+        echo "   macOS: brew install git"
+        echo "   Linux: sudo apt-get update && sudo apt-get install -y git"
         exit 1
     fi
     echo "✅ Git $(git --version | cut -d' ' -f3)"
@@ -39,6 +57,9 @@ check_git() {
 check_rust() {
     if ! command -v cargo &> /dev/null; then
         echo "❌ Rust required. Install from: https://rustup.rs/"
+        echo ""
+        echo "💡 Quick install:"
+        echo "   curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh"
         exit 1
     fi
     echo "✅ Rust $(cargo --version | cut -d' ' -f2)"
