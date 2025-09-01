@@ -4,6 +4,13 @@
 
 ## 🚀 Super Simple Installation
 
+### 🖱️ **Click to Install (Easiest for Non-Developers)**
+
+**macOS:** Download `install-nova.command` and double-click
+**Windows:** Download `install-nova.bat` and double-click
+
+### 💻 **Command Line Installation (For Developers)**
+
 ```bash
 curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova.sh | bash
 ```
