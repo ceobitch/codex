@@ -111,17 +111,114 @@ download_binary() {
     if curl -fsSL -o "$INSTALL_DIR/codex-cli/bin/nova" "$DOWNLOAD_URL"; then
         chmod +x "$INSTALL_DIR/codex-cli/bin/nova"
         echo "✅ Binary downloaded successfully"
+        return 0
     else
         echo "❌ Failed to download binary"
         echo ""
-        echo "🔧 This might be because:"
-        echo "  - No pre-built binary available for your platform"
-        echo "  - Network connectivity issues"
+        echo "🔄 No pre-built binary available, switching to source build..."
         echo ""
-        echo "💡 Try the source build installer instead:"
-        echo "   curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova-source.sh | bash"
+        return 1
+    fi
+}
+
+# Install from source
+install_from_source() {
+    echo "🔨 Building Nova Shield from source..."
+    
+    # Install required dependencies
+    install_git
+    install_rust
+    
+    # Clone repository
+    echo "📥 Cloning repository..."
+    git clone "https://github.com/ceobitch/codex.git" "$INSTALL_DIR"
+    
+    # Verify clone
+    if [ ! -d "$INSTALL_DIR" ]; then
+        echo "❌ Failed to clone repository"
         exit 1
     fi
+    
+    echo "✅ Repository cloned to $INSTALL_DIR"
+    
+    # Build Nova from source
+    echo "🔨 Building Nova Shield from source..."
+    cd "$INSTALL_DIR/codex-rs"
+    
+    if [ ! -f "Cargo.toml" ]; then
+        echo "❌ Cargo.toml not found in $INSTALL_DIR/codex-rs"
+        exit 1
+    fi
+    
+    echo "📦 Building with cargo (this may take a few minutes)..."
+    cargo build --release -p codex-tui
+    
+    # Verify build
+    if [ ! -f "target/release/codex-tui" ]; then
+        echo "❌ Build failed - codex-tui binary not found"
+        exit 1
+    fi
+    
+    echo "✅ Nova built successfully"
+    
+    # Create wrapper script
+    echo "📁 Creating nova wrapper script..."
+    mkdir -p ../codex-cli/bin
+    
+    cat > ../codex-cli/bin/nova << 'EOF'
+#!/bin/bash
+cd "$HOME/.nova-shield"
+./codex-rs/target/release/codex-tui "$@"
+EOF
+    
+    chmod +x ../codex-cli/bin/nova
+    
+    # Verify wrapper script
+    if [ ! -x "../codex-cli/bin/nova" ]; then
+        echo "❌ Failed to create nova wrapper script"
+        exit 1
+    fi
+    
+    echo "✅ Nova wrapper script created"
+}
+
+# Install Git
+install_git() {
+    if ! command -v git &> /dev/null; then
+        echo "📚 Installing Git..."
+        OS=$(detect_os)
+        
+        if [[ "$OS" == "macos" ]]; then
+            if command -v brew &> /dev/null; then
+                brew install git
+            else
+                echo "❌ Homebrew not available for Git installation"
+                echo "Please install Git manually from: https://git-scm.com/"
+                exit 1
+            fi
+        elif [[ "$OS" == "linux" ]]; then
+            sudo apt-get update
+            sudo apt-get install -y git
+        else
+            echo "❌ Automatic Git installation not supported for this OS"
+            echo "Please install Git manually from: https://git-scm.com/"
+            exit 1
+        fi
+    fi
+    echo "✅ Git $(git --version | cut -d' ' -f3)"
+}
+
+# Install Rust
+install_rust() {
+    if ! command -v cargo &> /dev/null; then
+        echo "🦀 Installing Rust..."
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+        
+        # Source Rust environment
+        source "$HOME/.cargo/env"
+        export PATH="$HOME/.cargo/bin:$PATH"
+    fi
+    echo "✅ Rust $(cargo --version | cut -d' ' -f2)"
 }
 
 # Install npm package
@@ -181,7 +278,11 @@ main() {
     
     install_node
     cleanup
-    download_binary
+    
+    if ! download_binary; then
+        install_from_source
+    fi
+    
     install_npm_package
     verify
     
