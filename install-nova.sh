@@ -177,7 +177,7 @@ install_from_source() {
     
     # Create wrapper script
     echo "📁 Creating nova wrapper script..."
-    mkdir -p ../codex-cli/bin
+    mkdir -p "$INSTALL_DIR/codex-cli/bin"
     
     cat > ../codex-cli/bin/nova << 'EOF'
 #!/bin/bash
