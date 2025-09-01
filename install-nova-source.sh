@@ -95,8 +95,55 @@ install_nova() {
     
     cat > ../codex-cli/bin/nova << 'EOF'
 #!/bin/bash
+
+# Nova Shield - Wrapper Script
+# Handles nova command and special commands like update
+
 cd "$HOME/.nova-shield"
-./codex-rs/target/release/codex-tui "$@"
+
+# Check if this is an update command
+if [[ "$1" == "update" ]]; then
+    echo "🔄 Updating Nova Shield..."
+    echo "=========================="
+    
+    # Check if we're in a git repository
+    if [ -d ".git" ]; then
+        echo "📥 Fetching latest changes from git..."
+        git fetch origin main
+        
+        # Check if there are updates
+        LOCAL_COMMIT=$(git rev-parse HEAD)
+        REMOTE_COMMIT=$(git rev-parse origin/main)
+        
+        if [ "$LOCAL_COMMIT" != "$REMOTE_COMMIT" ]; then
+            echo "🔄 Updates available! Building latest version..."
+            git pull origin main
+            
+            # Rebuild Nova
+            echo "🔨 Building latest Nova Shield..."
+            cd codex-rs
+            cargo build --release -p codex-tui
+            
+            if [ -f "target/release/codex-tui" ]; then
+                echo "✅ Nova Shield updated successfully!"
+                echo ""
+                echo "🛡️ Latest version is now ready to use!"
+            else
+                echo "❌ Build failed during update"
+                exit 1
+            fi
+        else
+            echo "✅ Nova Shield is already up to date!"
+        fi
+    else
+        echo "❌ Not a git repository"
+        echo "💡 Try reinstalling: curl -fsSL https://raw.githubusercontent.com/ceobitch/codex/main/install-nova.sh | bash"
+        exit 1
+    fi
+else
+    # Run the normal Nova Shield binary
+    ./codex-rs/target/release/codex-tui "$@"
+fi
 EOF
     
     chmod +x ../codex-cli/bin/nova

@@ -38,7 +38,20 @@ After installation:
 nova                # Start Nova Shield
 nova --help         # Show help
 nova "scan system"  # Start with a specific task
+nova update         # Update to latest version
 ```
+
+## 🔄 **Update Nova Shield**
+
+To get the latest version:
+```bash
+nova update
+```
+
+This will:
+- 📥 Fetch latest changes from git
+- 🔨 Rebuild Nova Shield with latest features
+- ✅ Keep you up to date automatically
 
 ## 🛡️ **What Nova Does**
 
