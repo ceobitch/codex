@@ -285,7 +285,7 @@ impl AuthModeWidget {
             ])
             .style(Style::default().add_modifier(Modifier::DIM)),
             Line::from(""),
-            Line::from("  Press Enter to continue").fg(Color::Cyan),
+            Line::from("  Press Enter to continue").fg(Color::Rgb(255, 165, 0)),
         ];
 
         Paragraph::new(lines)

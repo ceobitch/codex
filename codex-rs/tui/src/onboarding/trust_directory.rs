@@ -70,7 +70,7 @@ impl WidgetRef for &TrustDirectoryWidget {
             |idx: usize, option: TrustDirectorySelection, text: &str| -> Line<'static> {
                 let is_selected = self.highlighted == option;
                 if is_selected {
-                    Line::from(format!("> {}. {text}", idx + 1)).cyan()
+                    Line::from(format!("> {}. {text}", idx + 1)).fg(Color::Rgb(255, 165, 0))
                 } else {
                     Line::from(format!("  {}. {}", idx + 1, text))
                 }
